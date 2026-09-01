@@ -1,0 +1,571 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #000f25;
+    color: #eff3ed;
+    line-height: 1.6;
+    transition: 0.3s ease;
+}
+
+header {
+    background: #1f2937;
+    color: rgb(0, 171, 250);
+}
+
+nav {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav h1 {
+    font-size: 24px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+nav a:hover {
+    color: #60a5fa;
+}
+
+.hero {
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+}
+
+.hero h2 {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 20px;
+    margin-bottom: 30px;
+}
+
+.btn {
+    display: inline-block;
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 16px;
+    transition: 0.2s ease;
+}
+
+.btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+.features {
+    max-width: 1100px;
+    margin: auto;
+    padding: 50px 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.feature-card,
+.about-card,
+.settings-card,
+.summary-card,
+.expense-form,
+.expense-list,
+.budget-form,
+.category-summary {
+    background: #1f2937;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+}
+
+.feature-card h3 {
+    margin-bottom: 10px;
+}
+
+.page {
+    max-width: 900px;
+    margin: auto;
+    padding: 60px 20px;
+}
+
+.page h2,
+.tracker-page h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+.about-card {
+    margin-top: 30px;
+}
+
+.contact-form {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #374151;
+    background: #272626;
+    color: white;
+    border-radius: 7px;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+input::placeholder {
+    color: #6b7280;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.tracker-page {
+    max-width: 1100px;
+    margin: auto;
+    padding: 50px 20px;
+}
+
+.tracker-page > h2 {
+    text-align: center;
+    font-size: 40px;
+    color: #39FF14;
+    margin-bottom: 30px;
+}
+
+.summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.summary-card {
+    text-align: center;
+    padding: 30px 20px;
+    border: 1px solid #374151;
+    transition: 0.25s ease;
+}
+
+.summary-card:hover {
+    transform: translateY(-5px);
+    border-color: #2563eb;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.summary-card h3 {
+    color: #9ca3af;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.summary-card p {
+    font-size: 30px;
+    font-weight: bold;
+    color: #39FF14;
+}
+
+#total-spent {
+    color: #60a5fa;
+}
+
+#remaining {
+    color: #39FF14;
+}
+
+#remaining.negative {
+    color: #ef4444;
+}
+
+.category-summary {
+    margin-bottom: 30px;
+    border: 1px solid #374151;
+}
+
+.category-summary h3 {
+    margin-bottom: 20px;
+    color: white;
+    font-size: 22px;
+}
+
+#category-empty-message {
+    color: #9ca3af;
+    text-align: center;
+    padding: 10px;
+}
+
+.category-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    background: #111827;
+    border: 1px solid #374151;
+    border-radius: 8px;
+}
+
+.category-summary-row span {
+    color: #d1d5db;
+    font-size: 16px;
+}
+
+.category-summary-row strong {
+    color: #39FF14;
+    font-size: 16px;
+}
+
+.budget-form {
+    margin-bottom: 30px;
+    border: 1px solid #374151;
+}
+
+.budget-form h3 {
+    color: white;
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+.budget-form label {
+    display: block;
+    color: #d1d5db;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.budget-input-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.budget-input-row input {
+    margin-bottom: 0;
+    flex: 1;
+}
+
+.budget-input-row .btn {
+    white-space: nowrap;
+}
+
+#budget-message {
+    margin-top: 12px;
+    font-weight: bold;
+}
+
+.expense-form {
+    margin-bottom: 30px;
+    border: 1px solid #374151;
+}
+
+.expense-form h3,
+.expense-list h3 {
+    margin-bottom: 20px;
+    color: white;
+    font-size: 22px;
+}
+
+.expense-form label {
+    display: block;
+    color: #d1d5db;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.expense-form .btn {
+    width: 100%;
+    margin-top: 5px;
+}
+
+#form-message {
+    margin-top: 15px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.success-message {
+    color: #39FF14;
+}
+
+.error-message {
+    color: #ef4444;
+}
+
+.expense-list {
+    border: 1px solid #374151;
+}
+
+#empty-message {
+    text-align: center;
+    color: #9ca3af;
+    padding: 25px;
+}
+
+.expense-item {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1fr auto;
+    align-items: center;
+    gap: 20px;
+    padding: 18px;
+    margin-bottom: 10px;
+    background: #111827;
+    border: 1px solid #374151;
+    border-radius: 8px;
+    transition: 0.2s ease;
+}
+
+.expense-item:hover {
+    border-color: #2563eb;
+    background: #172033;
+}
+
+.expense-item div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.expense-item strong {
+    color: white;
+    font-size: 16px;
+}
+
+.expense-item span {
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+.expense-item .expense-amount {
+    color: #39FF14;
+    font-size: 18px;
+    text-align: right;
+}
+
+.remove-btn {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 9px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+.remove-btn:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+}
+
+.settings-card {
+    margin-bottom: 25px;
+}
+
+.settings-card h3 {
+    margin-bottom: 20px;
+    color: white;
+}
+
+.settings-card > label:not(.checkbox-label) {
+    display: block;
+    margin-bottom: 8px;
+    color: #d1d5db;
+    font-weight: bold;
+}
+
+.checkbox-label {
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px !important;
+    color: #d1d5db;
+    cursor: pointer;
+    width: fit-content;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    accent-color: #2563eb;
+    flex-shrink: 0;
+}
+
+.checkbox-label span {
+    line-height: 18px;
+}
+
+#settings-message {
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+body.light-mode {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+body.light-mode header,
+body.light-mode footer {
+    background: #ffffff;
+    color: #111827;
+}
+
+body.light-mode nav a {
+    color: #111827;
+}
+
+body.light-mode nav a:hover {
+    color: #2563eb;
+}
+
+body.light-mode .settings-card,
+body.light-mode .feature-card,
+body.light-mode .about-card,
+body.light-mode .summary-card,
+body.light-mode .expense-form,
+body.light-mode .expense-list,
+body.light-mode .budget-form,
+body.light-mode .category-summary {
+    background: #ffffff;
+    color: #111827;
+    border-color: #d1d5db;
+}
+
+body.light-mode .settings-card h3,
+body.light-mode .expense-form h3,
+body.light-mode .expense-list h3,
+body.light-mode .budget-form h3,
+body.light-mode .category-summary h3 {
+    color: #111827;
+}
+
+body.light-mode .settings-card > label:not(.checkbox-label),
+body.light-mode .checkbox-label,
+body.light-mode .budget-form label,
+body.light-mode .category-summary-row span {
+    color: #374151;
+}
+
+body.light-mode .category-summary-row {
+    background: #f9fafb;
+    border-color: #d1d5db;
+}
+
+body.light-mode input,
+body.light-mode textarea,
+body.light-mode select {
+    background: #ffffff;
+    color: #111827;
+    border-color: #d1d5db;
+}
+
+footer {
+    text-align: center;
+    background: #1f2937;
+    color: rgb(235, 227, 227);
+    padding: 25px;
+    margin-top: 50px;
+}
+
+@media (max-width: 768px) {
+
+    nav {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .hero h2 {
+        font-size: 36px;
+    }
+
+    .features,
+    .summary {
+        grid-template-columns: 1fr;
+    }
+
+    .expense-item {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .expense-item .expense-amount {
+        text-align: left;
+    }
+
+    .remove-btn {
+        width: 100%;
+    }
+
+    .tracker-page {
+        padding: 30px 15px;
+    }
+
+    .tracker-page > h2 {
+        font-size: 32px;
+    }
+
+    .budget-input-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .budget-input-row .btn {
+        width: 100%;
+    }
+
+    .page {
+        padding: 40px 15px;
+    }
+}

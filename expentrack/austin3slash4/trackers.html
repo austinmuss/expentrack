@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExpenTrack - Trackers</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <nav>
+        <h1>ExpenTrack</h1>
+
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="trackers.html">Expense Tracker</a></li>
+            <li><a href="summary.html">Summary</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contacts.html">Contact</a></li>
+            <li><a href="settings.html">Settings</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="tracker-page">
+
+    <h2>Expense Tracker</h2>
+
+    <form class="budget-form" id="budget-form">
+        <h3>Set Budget</h3>
+        <label for="budget-amount">Total Budget</label>
+        <div class="budget-input-row">
+            <input
+                id="budget-amount"
+                type="number"
+                placeholder="New budget amount"
+                min="0"
+                step="0.01"
+                required
+            >
+            <button class="btn" type="submit">Update Budget</button>
+        </div>
+        <p id="budget-message" aria-live="polite"></p>
+    </form>
+
+    <section class="summary">
+        <div class="summary-card">
+            <h3>Total Budget</h3>
+            <p id="total-budget">$1,000.00</p>
+        </div>
+
+        <div class="summary-card">
+            <h3>Total Spent</h3>
+            <p id="total-spent">$0.00</p>
+        </div>
+
+        <div class="summary-card">
+            <h3>Remaining</h3>
+            <p id="remaining">$1,000.00</p>
+        </div>
+    </section>
+
+    <form class="expense-form" id="expense-form">
+        <h3>Add Expense</h3>
+
+        <label for="expense-name">Expense name</label>
+        <input
+            id="expense-name"
+            type="text"
+            placeholder="Expense name"
+            required
+        >
+
+        <label for="expense-amount">Amount</label>
+        <input
+            id="expense-amount"
+            type="number"
+            placeholder="Amount"
+            min="0.01"
+            step="0.01"
+            required
+        >
+
+        <label for="expense-category">Category</label>
+        <select id="expense-category" required>
+            <option value="Food">Food</option>
+            <option value="Transportation">Transportation</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Bills">Bills</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <label for="expense-date">Date</label>
+        <input id="expense-date" type="date" required>
+
+        <button class="btn" type="submit">Add Expense</button>
+
+        <p id="form-message" aria-live="polite"></p>
+    </form>
+
+    <section class="expense-list">
+        <h3>Recent Expenses</h3>
+
+        <p id="empty-message">No expenses added yet.</p>
+
+        <div id="expense-items"></div>
+    </section>
+
+</main>
+
+<footer>
+    <p>ExpenTrack</p>
+</footer>
+
+<script>
+    let totalBudget = Number(localStorage.getItem("expenseBudget")) || 1000;
+    let expenses = JSON.parse(localStorage.getItem("expenseItemsList")) || [];
+
+    const savedDarkMode = localStorage.getItem("expenseDarkMode");
+    if (savedDarkMode === "true") {
+        document.body.classList.add("light-mode");
+    }
+
+    const selectedCurrency = localStorage.getItem("expenseCurrency") || "USD";
+
+    const budgetForm = document.getElementById("budget-form");
+    const budgetInput = document.getElementById("budget-amount");
+    const budgetMessage = document.getElementById("budget-message");
+    const totalBudgetElement = document.getElementById("total-budget");
+
+    const expenseForm = document.getElementById("expense-form");
+    const nameInput = document.getElementById("expense-name");
+    const amountInput = document.getElementById("expense-amount");
+    const categoryInput = document.getElementById("expense-category");
+    const dateInput = document.getElementById("expense-date");
+    const expenseItems = document.getElementById("expense-items");
+    const emptyMessage = document.getElementById("empty-message");
+    const formMessage = document.getElementById("form-message");
+    const totalSpentElement = document.getElementById("total-spent");
+    const remainingElement = document.getElementById("remaining");
+
+    const currencyFormatter = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: selectedCurrency
+    });
+
+    function setDefaultDate() {
+        const today = new Date();
+        const localDate = new Date(
+            today.getTime() - today.getTimezoneOffset() * 60000
+        ).toISOString().split("T")[0];
+
+        dateInput.value = localDate;
+    }
+
+    function saveExpenses() {
+        localStorage.setItem("expenseItemsList", JSON.stringify(expenses));
+    }
+
+    function updateSummary() {
+        const totalSpent = expenses.reduce((total, expense) => {
+            return total + expense.amount;
+        }, 0);
+
+        const remaining = totalBudget - totalSpent;
+
+        totalBudgetElement.textContent = currencyFormatter.format(totalBudget);
+        totalSpentElement.textContent = currencyFormatter.format(totalSpent);
+        remainingElement.textContent = currencyFormatter.format(remaining);
+
+        remainingElement.classList.toggle("negative", remaining < 0);
+    }
+
+    function displayExpenses() {
+        expenseItems.innerHTML = "";
+        emptyMessage.hidden = expenses.length > 0;
+
+        expenses.forEach((expense) => {
+            const item = document.createElement("article");
+            item.className = "expense-item";
+
+            const details = document.createElement("div");
+
+            const name = document.createElement("strong");
+            name.textContent = expense.name;
+
+            const category = document.createElement("span");
+            category.textContent = expense.category;
+
+            details.append(name, category);
+
+            const date = document.createElement("span");
+            date.textContent = expense.date;
+
+            const amount = document.createElement("strong");
+            amount.className = "expense-amount";
+            amount.textContent = currencyFormatter.format(expense.amount);
+
+            const removeButton = document.createElement("button");
+            removeButton.type = "button";
+            removeButton.className = "remove-btn";
+            removeButton.textContent = "Remove";
+            removeButton.setAttribute(
+                "aria-label",
+                `Remove ${expense.name}`
+            );
+
+            removeButton.addEventListener("click", () => {
+                expenses = expenses.filter((item) => item.id !== expense.id);
+                saveExpenses();
+                displayExpenses();
+                updateSummary();
+            });
+
+            item.append(details, date, amount, removeButton);
+            expenseItems.appendChild(item);
+        });
+    }
+
+    budgetForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const newBudget = Number(budgetInput.value);
+
+        if (!Number.isFinite(newBudget) || newBudget < 0) {
+            budgetMessage.textContent = "Enter a valid budget amount.";
+            budgetMessage.className = "error-message";
+            return;
+        }
+
+        totalBudget = newBudget;
+        localStorage.setItem("expenseBudget", totalBudget);
+        updateSummary();
+
+        budgetForm.reset();
+        budgetInput.value = totalBudget;
+        budgetMessage.textContent = "Budget updated successfully.";
+        budgetMessage.className = "success-message";
+    });
+
+    expenseForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const name = nameInput.value.trim();
+        const amount = Number(amountInput.value);
+        const category = categoryInput.value;
+        const date = dateInput.value;
+
+        if (!name || !date || !Number.isFinite(amount) || amount <= 0) {
+            formMessage.textContent =
+                "Enter an expense name, a valid amount, and a date.";
+            formMessage.className = "error-message";
+            return;
+        }
+
+        expenses.unshift({
+            id: Date.now(),
+            name,
+            amount,
+            category,
+            date
+        });
+
+        saveExpenses();
+        displayExpenses();
+        updateSummary();
+
+        expenseForm.reset();
+        setDefaultDate();
+
+        formMessage.textContent = "Expense added successfully.";
+        formMessage.className = "success-message";
+        nameInput.focus();
+    });
+
+    budgetInput.value = totalBudget;
+    setDefaultDate();
+    displayExpenses();
+    updateSummary();
+</script>
+
+</body>
+</html>

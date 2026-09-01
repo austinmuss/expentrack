@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExpenTrack - Summary</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <nav>
+        <h1>ExpenTrack</h1>
+
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="trackers.html">Expense Tracker</a></li>
+            <li><a href="summary.html">Summary</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contacts.html">Contact</a></li>
+            <li><a href="settings.html">Settings</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="tracker-page">
+
+    <h2>Expense Summary</h2>
+
+    <section class="summary">
+        <div class="summary-card">
+            <h3>Total Budget</h3>
+            <p id="total-budget">$1,000.00</p>
+        </div>
+
+        <div class="summary-card">
+            <h3>Total Spent</h3>
+            <p id="total-spent">$0.00</p>
+        </div>
+
+        <div class="summary-card">
+            <h3>Remaining</h3>
+            <p id="remaining">$1,000.00</p>
+        </div>
+    </section>
+
+    <section class="category-summary">
+        <h3>Spending by Category</h3>
+        <div id="category-summary-items">
+            <p id="category-empty-message">No category data available.</p>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <p>ExpenTrack</p>
+</footer>
+
+<script>
+    const totalBudget = Number(localStorage.getItem("expenseBudget")) || 1000;
+    const expenses = JSON.parse(localStorage.getItem("expenseItemsList")) || [];
+
+    const savedDarkMode = localStorage.getItem("expenseDarkMode");
+    if (savedDarkMode === "true") {
+        document.body.classList.add("light-mode");
+    }
+
+    const selectedCurrency = localStorage.getItem("expenseCurrency") || "USD";
+
+    const totalBudgetElement = document.getElementById("total-budget");
+    const totalSpentElement = document.getElementById("total-spent");
+    const remainingElement = document.getElementById("remaining");
+    const categorySummaryItems = document.getElementById("category-summary-items");
+    const categoryEmptyMessage = document.getElementById("category-empty-message");
+
+    const currencyFormatter = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: selectedCurrency
+    });
+
+    function updateSummaryPage() {
+        const totalSpent = expenses.reduce((total, expense) => {
+            return total + expense.amount;
+        }, 0);
+
+        const remaining = totalBudget - totalSpent;
+
+        totalBudgetElement.textContent = currencyFormatter.format(totalBudget);
+        totalSpentElement.textContent = currencyFormatter.format(totalSpent);
+        remainingElement.textContent = currencyFormatter.format(remaining);
+
+        remainingElement.classList.toggle("negative", remaining < 0);
+
+        categorySummaryItems.innerHTML = "";
+
+        if (expenses.length === 0) {
+            categoryEmptyMessage.hidden = false;
+            categorySummaryItems.appendChild(categoryEmptyMessage);
+            return;
+        }
+
+        const categoryTotals = {};
+        expenses.forEach((expense) => {
+            categoryTotals[expense.category] = (categoryTotals[expense.category] || 0) + expense.amount;
+        });
+
+        for (const [category, total] of Object.entries(categoryTotals)) {
+            const row = document.createElement("div");
+            row.className = "category-summary-row";
+
+            const catName = document.createElement("span");
+            catName.textContent = category;
+
+            const catAmount = document.createElement("strong");
+            catAmount.textContent = currencyFormatter.format(total);
+
+            row.append(catName, catAmount);
+            categorySummaryItems.appendChild(row);
+        }
+    }
+
+    updateSummaryPage();
+</script>
+
+</body>
+</html>
